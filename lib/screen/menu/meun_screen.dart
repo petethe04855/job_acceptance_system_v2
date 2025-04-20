@@ -76,247 +76,244 @@ class _MeunScreenState extends State<MeunScreen> {
         foregroundColor: Colors.white,
       ),
       drawer: _buildDrawer(),
-      body: RefreshIndicator(
-        key: _refreshKey,
-        onRefresh: _loadTasks,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              if (_tasks.any(
-                (task) =>
-                    task.uidUser == _user?.uid && task.taskStatus == 'รอส่งงาน',
-              ))
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 8.0,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                _loadTasks();
+              },
+              child: Text('Refresh'),
+            ),
+            if (_tasks.any(
+              (task) =>
+                  task.uidUser == _user?.uid && task.taskStatus == 'รอส่งงาน',
+            ))
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
+                child: Card(
+                  color: Colors.white,
+                  elevation: 4.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
                   ),
-                  child: Card(
-                    color: Colors.white,
-                    elevation: 4.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'งานที่รับอยู่ปัจจุบัน',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'งานที่รับอยู่ปัจจุบัน',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
-                          const SizedBox(height: 10.0),
-                          SizedBox(
-                            height: 200, // กำหนดความสูงให้เหมาะสม
-                            child: ListView.builder(
-                              itemCount:
+                        ),
+                        const SizedBox(height: 10.0),
+                        SizedBox(
+                          height: 200, // กำหนดความสูงให้เหมาะสม
+                          child: ListView.builder(
+                            itemCount:
+                                _tasks
+                                    .where(
+                                      (task) =>
+                                          task.uidUser == _user!.uid &&
+                                          task.taskStatus == 'รอส่งงาน',
+                                    )
+                                    .length,
+                            itemBuilder: (context, index) {
+                              var taskList =
                                   _tasks
                                       .where(
                                         (task) =>
                                             task.uidUser == _user!.uid &&
                                             task.taskStatus == 'รอส่งงาน',
                                       )
-                                      .length,
-                              itemBuilder: (context, index) {
-                                var taskList =
-                                    _tasks
-                                        .where(
-                                          (task) =>
-                                              task.uidUser == _user!.uid &&
-                                              task.taskStatus == 'รอส่งงาน',
-                                        )
-                                        .toList();
-                                var task = taskList[index];
+                                      .toList();
+                              var task = taskList[index];
 
-                                return Container(
-                                  margin: const EdgeInsets.symmetric(
-                                    vertical: 6.0,
-                                    horizontal: 8.0,
+                              return Container(
+                                margin: const EdgeInsets.symmetric(
+                                  vertical: 6.0,
+                                  horizontal: 8.0,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: backgroundLight,
+                                  borderRadius: BorderRadius.circular(15),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 6,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0,
+                                    vertical: 8.0,
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: backgroundLight,
-                                    borderRadius: BorderRadius.circular(15),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.1),
-                                        blurRadius: 6,
-                                        offset: const Offset(0, 3),
-                                      ),
-                                    ],
+                                  leading: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.network(
+                                      task.image,
+                                      width: 55,
+                                      height: 55,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) => Icon(
+                                            Icons.image_not_supported,
+                                            size: 55,
+                                            color: Colors.grey.shade400,
+                                          ),
+                                    ),
                                   ),
-                                  child: ListTile(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                      vertical: 8.0,
+                                  title: Text(
+                                    task.name,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: backgroundDark,
                                     ),
-                                    leading: ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: Image.network(
-                                        task.image,
-                                        width: 55,
-                                        height: 55,
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                Icon(
-                                                  Icons.image_not_supported,
-                                                  size: 55,
-                                                  color: Colors.grey.shade400,
-                                                ),
-                                      ),
-                                    ),
-                                    title: Text(
-                                      task.name,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                        color: backgroundDark,
-                                      ),
-                                    ),
-                                    subtitle: Text(
-                                      task.description,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        color: primaryText,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    trailing: Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: secondary,
-                                      size: 18,
-                                    ),
-                                    onTap: () async {
-                                      bool? isUpdated = await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (context) => JobdetailScreen(
-                                                tasksData: task,
-                                                user: _user,
-                                              ),
-                                        ),
-                                      );
-                                      if (isUpdated == true) {
-                                        _loadTasks();
-                                      }
-                                    },
                                   ),
-                                );
-                              },
-                            ),
+                                  subtitle: Text(
+                                    task.description,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: primaryText,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  trailing: Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: secondary,
+                                    size: 18,
+                                  ),
+                                  onTap: () async {
+                                    bool? isUpdated = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => JobdetailScreen(
+                                              tasksData: task,
+                                              user: _user,
+                                            ),
+                                      ),
+                                    );
+                                    if (isUpdated == true) {
+                                      _loadTasks();
+                                    }
+                                  },
+                                ),
+                              );
+                            },
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
+              ),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 8.0,
-                ),
-                child: Expanded(
-                  flex: pendingTasks.isNotEmpty ? 8 : 9,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: _tasks.length,
-                    itemBuilder: (context, index) {
-                      TasksModel task = _tasks[index];
-                      return task.taskStatus == 'รอรับงาน'
-                          ? Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: GestureDetector(
-                              onTap: () async {
-                                bool? isUpdated = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => JobdetailScreen(
-                                          tasksData: task,
-                                          user: _user,
-                                        ),
-                                  ),
-                                );
-                                if (isUpdated == true) {
-                                  _loadTasks();
-                                }
-                              },
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: backgroundLight,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
+              child: Expanded(
+                flex: pendingTasks.isNotEmpty ? 8 : 9,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _tasks.length,
+                  itemBuilder: (context, index) {
+                    TasksModel task = _tasks[index];
+                    return task.taskStatus == 'รอรับงาน'
+                        ? Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: GestureDetector(
+                            onTap: () async {
+                              bool? isUpdated = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => JobdetailScreen(
+                                        tasksData: task,
+                                        user: _user,
+                                      ),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 50,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          color: primaryText,
-                                          borderRadius: BorderRadius.circular(
-                                            15,
-                                          ),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            15,
-                                          ),
-                                          child: Image.network(
-                                            task.image,
-                                            fit:
-                                                BoxFit
-                                                    .cover, // ทำให้รูปภาพเต็มกรอบและรักษาสัดส่วน
-                                          ),
+                              );
+                              if (isUpdated == true) {
+                                _loadTasks();
+                              }
+                            },
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: backgroundLight,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(15),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 50,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: primaryText,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Image.network(
+                                          task.image,
+                                          fit:
+                                              BoxFit
+                                                  .cover, // ทำให้รูปภาพเต็มกรอบและรักษาสัดส่วน
                                         ),
                                       ),
-                                      const SizedBox(width: 10),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            task.name,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: primaryText,
-                                            ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          task.name,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: primaryText,
                                           ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            task.description,
-                                            style: const TextStyle(
-                                              color: primaryText,
-                                            ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          task.description,
+                                          style: const TextStyle(
+                                            color: primaryText,
                                           ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                          )
-                          : Container();
-                    },
-                  ),
+                          ),
+                        )
+                        : Container();
+                  },
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

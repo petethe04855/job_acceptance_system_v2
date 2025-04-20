@@ -48,7 +48,7 @@ class _EditScreenState extends State<EditScreen> {
       backgroundColor: primary,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Text('เพิ่มสินค้า'),
+        title: Text('รายละเอียดงาน'),
         backgroundColor: primary,
         foregroundColor: Colors.white,
         centerTitle: true,

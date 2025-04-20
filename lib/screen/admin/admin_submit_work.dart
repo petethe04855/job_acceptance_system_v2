@@ -85,7 +85,7 @@ class _AdminSubmitWorkState extends State<AdminSubmitWork> {
                       time,
                       _detailsController.text,
                     );
-                    Navigator.pop(context);
+                    Navigator.popAndPushNamed(context, '/meun_admin_screen');
                   },
                   child: Text(
                     "ส่งประเมิน",

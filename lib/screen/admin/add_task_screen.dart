@@ -53,7 +53,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       backgroundColor: primary,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Text('เพิ่มสินค้า'),
+        title: Text('เพิ่มงาน'),
         backgroundColor: primary,
         foregroundColor: Colors.white,
         centerTitle: true,
@@ -108,7 +108,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   );
                   Navigator.pop(context);
                 },
-                child: Text('เพิ่มสินค้า'),
+                child: Text('เพิ่มงาน'),
               ),
             ],
           ),
