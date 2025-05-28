@@ -261,8 +261,11 @@ class _JobdetailScreenState extends State<JobdetailScreen> {
                       children: [
                         Icon(Icons.attach_file, color: secondary),
                         Text(
-                          fileNameUploaded?.files.single.name ??
-                              'แนบไฟล์', // 📌 แสดงชื่อไฟล์ที่เลือก
+                          (fileNameUploaded?.files.single.name != null)
+                              ? (fileNameUploaded!.files.single.name.length > 20
+                                  ? '${fileNameUploaded!.files.single.name.substring(0, 20)}...'
+                                  : fileNameUploaded!.files.single.name)
+                              : 'แนบไฟล์',
                           style: TextStyle(color: primaryText),
                         ),
                       ],

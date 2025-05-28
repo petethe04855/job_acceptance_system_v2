@@ -25,8 +25,6 @@ class _MeunScreenState extends State<MeunScreen> {
   final FirebaseAuthService _userService = FirebaseAuthService();
   final TaskServices _taskServices = TaskServices();
   final Utility _utility = Utility();
-  final GlobalKey<RefreshIndicatorState> _refreshKey =
-      GlobalKey<RefreshIndicatorState>();
 
   List<TasksModel> _tasks = [];
   UserModel? _user;

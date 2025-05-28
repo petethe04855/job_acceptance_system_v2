@@ -148,7 +148,7 @@ class _MeunAdminScreenState extends State<MeunAdminScreen> {
             },
           ),
           ListTile(
-            title: const Text('เวลาที่นักศึกษาลงเวลา เข้า-ออก'),
+            title: const Text('อนุมัติการลา'),
             onTap: () {
               Navigator.push(
                 context,
