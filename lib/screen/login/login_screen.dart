@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_3/app_router.dart';
-import 'package:flutter_application_3/services/firbase_auth_services.dart';
-import 'package:flutter_application_3/themes/colors.dart';
-import 'package:flutter_application_3/components/custom_textfield.dart';
+import 'package:flutter_application_1/app_router.dart';
+import 'package:flutter_application_1/services/firbase_auth_services.dart';
+import 'package:flutter_application_1/themes/colors.dart';
+import 'package:flutter_application_1/components/custom_textfield.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -40,8 +40,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
         // Fetch the user's role from Firestore
         String uid = FirebaseAuth.instance.currentUser!.uid;
-        DocumentSnapshot userSnapshot =
-            await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(uid)
+            .get();
 
         // Check if the user's role is 'admin' or 'user'
         if (userSnapshot.exists) {
@@ -174,10 +176,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           suffixIcon: IconButton(
                             color: Colors.white,
                             onPressed: passwordfunction,
-                            icon:
-                                !_isObscure
-                                    ? const Icon(Icons.visibility_off)
-                                    : const Icon(Icons.visibility),
+                            icon: !_isObscure
+                                ? const Icon(Icons.visibility_off)
+                                : const Icon(Icons.visibility),
                           ),
                           obscureText: !_isObscure,
                           validator: (value) {

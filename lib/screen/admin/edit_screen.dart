@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_3/components/custom_textfield.dart';
-import 'package:flutter_application_3/models/tasks_model.dart';
-import 'package:flutter_application_3/services/task_services.dart';
-import 'package:flutter_application_3/themes/colors.dart';
+import 'package:flutter_application_1/components/custom_textfield.dart';
+import 'package:flutter_application_1/models/tasks_model.dart';
+import 'package:flutter_application_1/services/task_services.dart';
+import 'package:flutter_application_1/themes/colors.dart';
 
 class EditScreen extends StatefulWidget {
   final TasksModel tasksData;
@@ -61,14 +61,13 @@ class _EditScreenState extends State<EditScreen> {
             children: <Widget>[
               GestureDetector(
                 onTap: getImage,
-                child:
-                    _image == null
-                        ? Image.network(
-                          widget.tasksData.image,
-                          height: 100,
-                          width: 100,
-                        )
-                        : Image.file(_image!, height: 100, width: 100),
+                child: _image == null
+                    ? Image.network(
+                        widget.tasksData.image,
+                        height: 100,
+                        width: 100,
+                      )
+                    : Image.file(_image!, height: 100, width: 100),
               ),
               SizedBox(height: 10),
               ElevatedButton(onPressed: getImage, child: Text('เลือกรูปภาพ')),

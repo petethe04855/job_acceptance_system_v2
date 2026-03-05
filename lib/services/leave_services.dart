@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_application_3/models/leave_mode.dart';
+import 'package:flutter_application_1/models/leave_mode.dart';
 
 class LeaveServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -26,11 +26,10 @@ class LeaveServices {
 
   Future<List<LeaveModel>> getLeavesByUserId(String userId) async {
     try {
-      var querySnapshot =
-          await _firestore
-              .collection('Leave')
-              .where('userId', isEqualTo: userId)
-              .get();
+      var querySnapshot = await _firestore
+          .collection('Leave')
+          .where('userId', isEqualTo: userId)
+          .get();
       List<LeaveModel> leaves = [];
       for (var doc in querySnapshot.docs) {
         leaves.add(
@@ -53,11 +52,10 @@ class LeaveServices {
 
   Future<List<LeaveModel>> getLeavesByStatus() async {
     try {
-      var querySnapshot =
-          await _firestore
-              .collection('Leave')
-              .where('status', isEqualTo: "รอการตอบรับ")
-              .get();
+      var querySnapshot = await _firestore
+          .collection('Leave')
+          .where('status', isEqualTo: "รอการตอบรับ")
+          .get();
       List<LeaveModel> leaves = [];
       for (var doc in querySnapshot.docs) {
         leaves.add(
@@ -104,11 +102,10 @@ class LeaveServices {
   Future<void> updateLeaveStatusByUid(String uid) async {
     try {
       // ค้นหาเอกสารที่มี uid ตรงกับค่าที่ระบุ
-      var querySnapshot =
-          await _firestore
-              .collection('Leave')
-              .where('userId', isEqualTo: uid)
-              .get();
+      var querySnapshot = await _firestore
+          .collection('Leave')
+          .where('userId', isEqualTo: uid)
+          .get();
 
       // อัปเดตสถานะสำหรับเอกสารที่ค้นพบ
       for (var doc in querySnapshot.docs) {
@@ -135,12 +132,11 @@ class LeaveServices {
   // ดึงคำขอลาที่รอการตอบรับ
   Future<List<LeaveModel>> getPendingLeaves() async {
     try {
-      var querySnapshot =
-          await _firestore
-              .collection('Leave')
-              .where('userId', isEqualTo: _auth.currentUser!.uid)
-              .where('status', isEqualTo: 'รอการตอบรับ')
-              .get();
+      var querySnapshot = await _firestore
+          .collection('Leave')
+          .where('userId', isEqualTo: _auth.currentUser!.uid)
+          .where('status', isEqualTo: 'รอการตอบรับ')
+          .get();
 
       return querySnapshot.docs.map((doc) {
         return LeaveModel(

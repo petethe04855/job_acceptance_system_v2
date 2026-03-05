@@ -2,9 +2,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_3/components/custom_textfield.dart';
-import 'package:flutter_application_3/services/task_services.dart';
-import 'package:flutter_application_3/themes/colors.dart';
+import 'package:flutter_application_1/components/custom_textfield.dart';
+import 'package:flutter_application_1/services/task_services.dart';
+import 'package:flutter_application_1/themes/colors.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
@@ -66,10 +66,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             children: <Widget>[
               GestureDetector(
                 onTap: getImage,
-                child:
-                    _image == null
-                        ? Icon(Icons.image, size: 100)
-                        : Image.file(_image!, height: 100, width: 100),
+                child: _image == null
+                    ? Icon(Icons.image, size: 100)
+                    : Image.file(_image!, height: 100, width: 100),
               ),
               SizedBox(height: 10),
               ElevatedButton(onPressed: getImage, child: Text('เลือกรูปภาพ')),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_3/models/user_model.dart';
-import 'package:flutter_application_3/screen/admin/history/check_user_screen.dart';
-import 'package:flutter_application_3/screen/admin/history/history_screen.dart';
-import 'package:flutter_application_3/screen/admin/history/leave_history_screen.dart';
-import 'package:flutter_application_3/themes/colors.dart';
+import 'package:flutter_application_1/models/user_model.dart';
+import 'package:flutter_application_1/screen/admin/history/check_user_screen.dart';
+import 'package:flutter_application_1/screen/admin/history/history_screen.dart';
+import 'package:flutter_application_1/screen/admin/history/leave_history_screen.dart';
+import 'package:flutter_application_1/themes/colors.dart';
 
 class StudentDetailsScreen extends StatefulWidget {
   final UserModel userDetail;

@@ -1,16 +1,16 @@
 // ignore_for_file: prefer_final_fields
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_3/app_router.dart';
-import 'package:flutter_application_3/models/tasks_model.dart';
-import 'package:flutter_application_3/models/user_model.dart';
-import 'package:flutter_application_3/screen/menu/check_screen.dart';
-import 'package:flutter_application_3/screen/menu/history_received_screen.dart';
-import 'package:flutter_application_3/screen/menu/jobdetails_screen.dart';
-import 'package:flutter_application_3/services/firbase_auth_services.dart';
-import 'package:flutter_application_3/services/task_services.dart';
-import 'package:flutter_application_3/themes/colors.dart';
-import 'package:flutter_application_3/utils/utility.dart';
+import 'package:flutter_application_1/app_router.dart';
+import 'package:flutter_application_1/models/tasks_model.dart';
+import 'package:flutter_application_1/models/user_model.dart';
+import 'package:flutter_application_1/screen/menu/check_screen.dart';
+import 'package:flutter_application_1/screen/menu/history_received_screen.dart';
+import 'package:flutter_application_1/screen/menu/jobdetails_screen.dart';
+import 'package:flutter_application_1/services/firbase_auth_services.dart';
+import 'package:flutter_application_1/services/task_services.dart';
+import 'package:flutter_application_1/themes/colors.dart';
+import 'package:flutter_application_1/utils/utility.dart';
 
 var refreshKey = GlobalKey<RefreshIndicatorState>();
 
@@ -63,9 +63,6 @@ class _MeunScreenState extends State<MeunScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<TasksModel> pendingTasks =
-        _tasks.where((task) => task.taskStatus == 'รอส่งงาน').toList();
-
     return Scaffold(
       backgroundColor: primary,
       appBar: AppBar(
@@ -115,23 +112,21 @@ class _MeunScreenState extends State<MeunScreen> {
                         SizedBox(
                           height: 200, // กำหนดความสูงให้เหมาะสม
                           child: ListView.builder(
-                            itemCount:
-                                _tasks
-                                    .where(
-                                      (task) =>
-                                          task.uidUser == _user!.uid &&
-                                          task.taskStatus == 'รอส่งงาน',
-                                    )
-                                    .length,
+                            itemCount: _tasks
+                                .where(
+                                  (task) =>
+                                      task.uidUser == _user!.uid &&
+                                      task.taskStatus == 'รอส่งงาน',
+                                )
+                                .length,
                             itemBuilder: (context, index) {
-                              var taskList =
-                                  _tasks
-                                      .where(
-                                        (task) =>
-                                            task.uidUser == _user!.uid &&
-                                            task.taskStatus == 'รอส่งงาน',
-                                      )
-                                      .toList();
+                              var taskList = _tasks
+                                  .where(
+                                    (task) =>
+                                        task.uidUser == _user!.uid &&
+                                        task.taskStatus == 'รอส่งงาน',
+                                  )
+                                  .toList();
                               var task = taskList[index];
 
                               return Container(
@@ -196,11 +191,10 @@ class _MeunScreenState extends State<MeunScreen> {
                                     bool? isUpdated = await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder:
-                                            (context) => JobdetailScreen(
-                                              tasksData: task,
-                                              user: _user,
-                                            ),
+                                        builder: (context) => JobdetailScreen(
+                                          tasksData: task,
+                                          user: _user,
+                                        ),
                                       ),
                                     );
                                     if (isUpdated == true) {
@@ -223,26 +217,24 @@ class _MeunScreenState extends State<MeunScreen> {
                 horizontal: 16.0,
                 vertical: 8.0,
               ),
-              child: Expanded(
-                flex: pendingTasks.isNotEmpty ? 8 : 9,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: _tasks.length,
-                  itemBuilder: (context, index) {
-                    TasksModel task = _tasks[index];
-                    return task.taskStatus == 'รอรับงาน'
-                        ? Padding(
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _tasks.length,
+                itemBuilder: (context, index) {
+                  TasksModel task = _tasks[index];
+                  return task.taskStatus == 'รอรับงาน'
+                      ? Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: GestureDetector(
                             onTap: () async {
                               bool? isUpdated = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder:
-                                      (context) => JobdetailScreen(
-                                        tasksData: task,
-                                        user: _user,
-                                      ),
+                                  builder: (context) => JobdetailScreen(
+                                    tasksData: task,
+                                    user: _user,
+                                  ),
                                 ),
                               );
                               if (isUpdated == true) {
@@ -271,9 +263,8 @@ class _MeunScreenState extends State<MeunScreen> {
                                         borderRadius: BorderRadius.circular(15),
                                         child: Image.network(
                                           task.image,
-                                          fit:
-                                              BoxFit
-                                                  .cover, // ทำให้รูปภาพเต็มกรอบและรักษาสัดส่วน
+                                          fit: BoxFit
+                                              .cover, // ทำให้รูปภาพเต็มกรอบและรักษาสัดส่วน
                                         ),
                                       ),
                                     ),
@@ -306,9 +297,8 @@ class _MeunScreenState extends State<MeunScreen> {
                             ),
                           ),
                         )
-                        : Container();
-                  },
-                ),
+                      : Container();
+                },
               ),
             ),
           ],
@@ -330,19 +320,19 @@ class _MeunScreenState extends State<MeunScreen> {
                 children: [
                   _user!.image == ''
                       ? const CircleAvatar(
-                        radius: 40,
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.person,
-                          size: 40,
-                          color: backgroundDark,
-                        ),
-                      )
+                          radius: 40,
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            Icons.person,
+                            size: 40,
+                            color: backgroundDark,
+                          ),
+                        )
                       : CircleAvatar(
-                        radius: 40,
-                        backgroundImage: NetworkImage(_user!.image),
-                        backgroundColor: Colors.transparent,
-                      ),
+                          radius: 40,
+                          backgroundImage: NetworkImage(_user!.image),
+                          backgroundColor: Colors.transparent,
+                        ),
                   const SizedBox(height: 10),
                   Text(
                     'ชื่อผู้ใช้: ${_user!.firstname} ${_user!.lastname}',

@@ -1,12 +1,12 @@
-import 'package:flutter_application_3/screen/admin/add_task_screen.dart';
-import 'package:flutter_application_3/screen/admin/meun_admin_screen.dart';
-import 'package:flutter_application_3/screen/admin/student_list_screen.dart';
-import 'package:flutter_application_3/screen/login/login_screen.dart';
-import 'package:flutter_application_3/screen/menu/forgot_password_screen.dart';
-import 'package:flutter_application_3/screen/menu/leave_screen.dart';
-import 'package:flutter_application_3/screen/menu/meun_screen.dart';
-import 'package:flutter_application_3/screen/menu/submit_work_screen.dart';
-import 'package:flutter_application_3/screen/register/resgister_screen.dart';
+import 'package:flutter_application_1/screen/admin/add_task_screen.dart';
+import 'package:flutter_application_1/screen/admin/meun_admin_screen.dart';
+import 'package:flutter_application_1/screen/admin/student_list_screen.dart';
+import 'package:flutter_application_1/screen/login/login_screen.dart';
+import 'package:flutter_application_1/screen/menu/forgot_password_screen.dart';
+import 'package:flutter_application_1/screen/menu/leave_screen.dart';
+import 'package:flutter_application_1/screen/menu/meun_screen.dart';
+import 'package:flutter_application_1/screen/menu/submit_work_screen.dart';
+import 'package:flutter_application_1/screen/register/resgister_screen.dart';
 
 // เส้นทางไปแต่ละหน้า
 

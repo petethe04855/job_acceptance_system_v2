@@ -27,11 +27,11 @@ migrate_working_dir/
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
-.flutter-plugins
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
 /build/
+/coverage/
 
 # Symbolication related
 app.*.symbols
@@ -43,3 +43,24 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firebase - sensitive API keys (DO NOT UPLOAD)
+lib/firebase_options.dart
+google-services.json
+**/android/app/google-services.json
+GoogleService-Info.plist
+**/ios/Runner/GoogleService-Info.plist
+
+# Android signing keys - sensitive
+key.properties
+*.jks
+*.keystore
+/android/key.properties
+
+# Environment variables - sensitive
+.env
+.env.*
+*.env
+
+# VS Code (optional - uncomment if you don't want to share launch config)
+# .vscode/

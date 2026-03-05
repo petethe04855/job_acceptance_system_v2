@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_3/models/user_model.dart';
-import 'package:flutter_application_3/screen/admin/student_detail_screen.dart';
-import 'package:flutter_application_3/services/user_data_services.dart';
-import 'package:flutter_application_3/themes/colors.dart';
+import 'package:flutter_application_1/models/user_model.dart';
+import 'package:flutter_application_1/screen/admin/student_detail_screen.dart';
+import 'package:flutter_application_1/services/user_data_services.dart';
+import 'package:flutter_application_1/themes/colors.dart';
 
 class StudentListScreen extends StatefulWidget {
   const StudentListScreen({super.key});

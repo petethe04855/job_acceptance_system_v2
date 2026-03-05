@@ -2,12 +2,12 @@
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_3/components/custom_textfield.dart';
-import 'package:flutter_application_3/models/tasks_model.dart';
-import 'package:flutter_application_3/models/user_model.dart';
-import 'package:flutter_application_3/services/task_services.dart';
-import 'package:flutter_application_3/themes/colors.dart';
-import 'package:flutter_application_3/utils/utility.dart';
+import 'package:flutter_application_1/components/custom_textfield.dart';
+import 'package:flutter_application_1/models/tasks_model.dart';
+import 'package:flutter_application_1/models/user_model.dart';
+import 'package:flutter_application_1/services/task_services.dart';
+import 'package:flutter_application_1/themes/colors.dart';
+import 'package:flutter_application_1/utils/utility.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class JobdetailScreen extends StatefulWidget {
@@ -241,38 +241,39 @@ class _JobdetailScreenState extends State<JobdetailScreen> {
           const SizedBox(height: 10),
           widget.tasksData.taskStatus == 'รอส่งงาน'
               ? Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: GestureDetector(
-                  onTap: () async {
-                    fileNameUploaded = await FilePicker.platform.pickFiles(
-                      allowMultiple: false,
-                      type: FileType.custom,
-                      allowedExtensions: ['jpg', 'pdf', 'docx'],
-                    );
-                    setState(() {}); // 📌 อัปเดต UI หลังจากเลือกไฟล์
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(20.0),
-                    decoration: const BoxDecoration(
-                      color: backgroundLight,
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.attach_file, color: secondary),
-                        Text(
-                          (fileNameUploaded?.files.single.name != null)
-                              ? (fileNameUploaded!.files.single.name.length > 20
-                                  ? '${fileNameUploaded!.files.single.name.substring(0, 20)}...'
-                                  : fileNameUploaded!.files.single.name)
-                              : 'แนบไฟล์',
-                          style: TextStyle(color: primaryText),
-                        ),
-                      ],
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      fileNameUploaded = await FilePicker.platform.pickFiles(
+                        allowMultiple: false,
+                        type: FileType.custom,
+                        allowedExtensions: ['jpg', 'pdf', 'docx'],
+                      );
+                      setState(() {}); // 📌 อัปเดต UI หลังจากเลือกไฟล์
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(20.0),
+                      decoration: const BoxDecoration(
+                        color: backgroundLight,
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.attach_file, color: secondary),
+                          Text(
+                            (fileNameUploaded?.files.single.name != null)
+                                ? (fileNameUploaded!.files.single.name.length >
+                                          20
+                                      ? '${fileNameUploaded!.files.single.name.substring(0, 20)}...'
+                                      : fileNameUploaded!.files.single.name)
+                                : 'แนบไฟล์',
+                            style: TextStyle(color: primaryText),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              )
+                )
               : const SizedBox(),
 
           const SizedBox(height: 10),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_3/models/tasks_model.dart';
-import 'package:flutter_application_3/models/user_model.dart';
-import 'package:flutter_application_3/screen/menu/jobdetails_screen.dart';
-import 'package:flutter_application_3/services/task_services.dart';
-import 'package:flutter_application_3/themes/colors.dart';
-import 'package:flutter_application_3/utils/utility.dart';
+import 'package:flutter_application_1/models/tasks_model.dart';
+import 'package:flutter_application_1/models/user_model.dart';
+import 'package:flutter_application_1/screen/menu/jobdetails_screen.dart';
+import 'package:flutter_application_1/services/task_services.dart';
+import 'package:flutter_application_1/themes/colors.dart';
+import 'package:flutter_application_1/utils/utility.dart';
 
 class HistoryReceivedScreen extends StatefulWidget {
   final UserModel user;
@@ -29,18 +29,21 @@ class _HistoryReceivedScreenState extends State<HistoryReceivedScreen> {
     );
 
     setState(() {
-      pendingTasks =
-          tasks.where((task) => task.taskStatus == 'รอส่งงาน').toList();
-      completedTasks =
-          tasks.where((task) => task.taskStatus == 'ส่งงานสำเร็จ').toList();
-      cancelledTasks =
-          tasks.where((task) => task.taskStatus == 'ยกเลิก').toList();
-      failedTasks =
-          tasks.where((task) => task.taskStatus == 'ไม่สำเร็จ').toList();
-      reviewedTasks =
-          tasks
-              .where((task) => task.taskStatus == 'ผ่านการประเมิน')
-              .toList(); // กรองงานที่ผ่านการประเมิน
+      pendingTasks = tasks
+          .where((task) => task.taskStatus == 'รอส่งงาน')
+          .toList();
+      completedTasks = tasks
+          .where((task) => task.taskStatus == 'ส่งงานสำเร็จ')
+          .toList();
+      cancelledTasks = tasks
+          .where((task) => task.taskStatus == 'ยกเลิก')
+          .toList();
+      failedTasks = tasks
+          .where((task) => task.taskStatus == 'ไม่สำเร็จ')
+          .toList();
+      reviewedTasks = tasks
+          .where((task) => task.taskStatus == 'ผ่านการประเมิน')
+          .toList(); // กรองงานที่ผ่านการประเมิน
     });
   }
 
@@ -105,11 +108,10 @@ class _HistoryReceivedScreenState extends State<HistoryReceivedScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder:
-                              (context) => JobdetailScreen(
-                                tasksData: task,
-                                user: widget.user,
-                              ),
+                          builder: (context) => JobdetailScreen(
+                            tasksData: task,
+                            user: widget.user,
+                          ),
                         ),
                       );
                     },

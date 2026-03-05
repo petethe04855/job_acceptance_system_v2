@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_3/components/custom_textfield.dart';
-import 'package:flutter_application_3/components/star_rating_widget.dart';
-import 'package:flutter_application_3/models/tasks_model.dart';
-import 'package:flutter_application_3/models/user_model.dart';
-import 'package:flutter_application_3/services/task_services.dart';
-import 'package:flutter_application_3/themes/colors.dart';
+import 'package:flutter_application_1/components/custom_textfield.dart';
+import 'package:flutter_application_1/components/star_rating_widget.dart';
+import 'package:flutter_application_1/models/tasks_model.dart';
+import 'package:flutter_application_1/models/user_model.dart';
+import 'package:flutter_application_1/services/task_services.dart';
+import 'package:flutter_application_1/themes/colors.dart';
 
 class AdminSubmitWork extends StatefulWidget {
   final TasksModel tasksData;

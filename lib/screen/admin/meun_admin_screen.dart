@@ -1,16 +1,16 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_3/app_router.dart';
-import 'package:flutter_application_3/models/tasks_model.dart';
-import 'package:flutter_application_3/models/user_model.dart';
-import 'package:flutter_application_3/screen/admin/admin_job_screen.dart';
-import 'package:flutter_application_3/screen/admin/approve_leave_screen.dart';
-import 'package:flutter_application_3/screen/admin/map/map_screen.dart';
-import 'package:flutter_application_3/services/firbase_auth_services.dart';
-import 'package:flutter_application_3/services/task_services.dart';
-import 'package:flutter_application_3/themes/colors.dart';
-import 'package:flutter_application_3/utils/utility.dart';
+import 'package:flutter_application_1/app_router.dart';
+import 'package:flutter_application_1/models/tasks_model.dart';
+import 'package:flutter_application_1/models/user_model.dart';
+import 'package:flutter_application_1/screen/admin/admin_job_screen.dart';
+import 'package:flutter_application_1/screen/admin/approve_leave_screen.dart';
+import 'package:flutter_application_1/screen/admin/map/map_screen.dart';
+import 'package:flutter_application_1/services/firbase_auth_services.dart';
+import 'package:flutter_application_1/services/task_services.dart';
+import 'package:flutter_application_1/themes/colors.dart';
+import 'package:flutter_application_1/utils/utility.dart';
 
 class MeunAdminScreen extends StatefulWidget {
   const MeunAdminScreen({super.key});
@@ -100,11 +100,8 @@ class _MeunAdminScreenState extends State<MeunAdminScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder:
-                                (context) => AdminJobScreen(
-                                  tasksData: task,
-                                  user: _user,
-                                ),
+                            builder: (context) =>
+                                AdminJobScreen(tasksData: task, user: _user),
                           ),
                         );
                       },

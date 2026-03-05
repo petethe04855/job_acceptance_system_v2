@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_3/components/custom_textfield.dart';
-import 'package:flutter_application_3/models/leave_mode.dart';
-import 'package:flutter_application_3/services/leave_services.dart';
-import 'package:flutter_application_3/themes/colors.dart';
-import 'package:flutter_application_3/utils/utility.dart';
+import 'package:flutter_application_1/components/custom_textfield.dart';
+import 'package:flutter_application_1/models/leave_mode.dart';
+import 'package:flutter_application_1/services/leave_services.dart';
+import 'package:flutter_application_1/themes/colors.dart';
+import 'package:flutter_application_1/utils/utility.dart';
 
 class LeaveScreen extends StatefulWidget {
   const LeaveScreen({super.key});
@@ -104,47 +104,46 @@ class _LeaveScreenState extends State<LeaveScreen> {
                 constraints: BoxConstraints(
                   maxHeight: 200, // ความสูงสูงสุดของ ListView
                 ),
-                child:
-                    _leavesByUserId.isEmpty
-                        ? Center(
-                          child: Text(
-                            "ไม่มีข้อมูล",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        )
-                        : ListView.builder(
-                          itemCount: _leavesByUserId.length,
-                          itemBuilder: (context, index) {
-                            LeaveModel leave = _leavesByUserId[index];
-                            return Card(
-                              margin: const EdgeInsets.symmetric(vertical: 8.0),
-                              child: ListTile(
-                                title: Text(
-                                  leave.reason,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 8),
-                                    Text("ประเภทการลา: ${leave.leaveType}"),
-                                    Text("สถานะ: ${leave.status}"),
-                                    Text(
-                                      "วันที่: ${leave.date.toString()}",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
+                child: _leavesByUserId.isEmpty
+                    ? Center(
+                        child: Text(
+                          "ไม่มีข้อมูล",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: _leavesByUserId.length,
+                        itemBuilder: (context, index) {
+                          LeaveModel leave = _leavesByUserId[index];
+                          return Card(
+                            margin: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: ListTile(
+                              title: Text(
+                                leave.reason,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            );
-                          },
-                        ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 8),
+                                  Text("ประเภทการลา: ${leave.leaveType}"),
+                                  Text("สถานะ: ${leave.status}"),
+                                  Text(
+                                    "วันที่: ${leave.date.toString()}",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
               ),
               const SizedBox(height: 20),
               const Text(
@@ -158,20 +157,20 @@ class _LeaveScreenState extends State<LeaveScreen> {
               const SizedBox(height: 20),
               _leaves.isEmpty
                   ? Center(
-                    child: Text(
-                      "ไม่มีคำขอลาที่รอการตอบรับ",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  )
-                  : Card(
-                    child: ListTile(
-                      title: Text(
-                        "คุณมีคำขอลาที่รอการอนุมัติ",
-                        style: TextStyle(color: Colors.black),
+                      child: Text(
+                        "ไม่มีคำขอลาที่รอการตอบรับ",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
-                      subtitle: Text("กรุณารอการตอบรับ"),
+                    )
+                  : Card(
+                      child: ListTile(
+                        title: Text(
+                          "คุณมีคำขอลาที่รอการอนุมัติ",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        subtitle: Text("กรุณารอการตอบรับ"),
+                      ),
                     ),
-                  ),
               const SizedBox(height: 20),
               DropdownButtonFormField<String>(
                 value: _selectedLeaveType,
@@ -202,13 +201,14 @@ class _LeaveScreenState extends State<LeaveScreen> {
                     borderSide: const BorderSide(width: 2.0),
                   ),
                 ),
-                items:
-                    _leaveTypes.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
+                items: _leaveTypes.map<DropdownMenuItem<String>>((
+                  String value,
+                ) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
               ),
               const SizedBox(height: 20),
               customTextFormFieldDetails(
@@ -222,24 +222,23 @@ class _LeaveScreenState extends State<LeaveScreen> {
               const SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
-                  onPressed:
-                      isPendingApproval
-                          ? null // ปิดการใช้งานปุ่มถ้ามีคำขอลาที่รอการอนุมัติ
-                          : () {
-                            if (_selectedLeaveType == 'เลือกประเภทการลา') {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('กรุณาเลือกประเภทการลา'),
-                                ),
-                              );
-                            } else {
-                              _leaveServices.createLeave(
-                                _selectedLeaveType,
-                                _leave.text,
-                              );
-                              Navigator.pop(context);
-                            }
-                          },
+                  onPressed: isPendingApproval
+                      ? null // ปิดการใช้งานปุ่มถ้ามีคำขอลาที่รอการอนุมัติ
+                      : () {
+                          if (_selectedLeaveType == 'เลือกประเภทการลา') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('กรุณาเลือกประเภทการลา'),
+                              ),
+                            );
+                          } else {
+                            _leaveServices.createLeave(
+                              _selectedLeaveType,
+                              _leave.text,
+                            );
+                            Navigator.pop(context);
+                          }
+                        },
                   child: const Text('บันทึก', style: TextStyle(fontSize: 16)),
                 ),
               ),

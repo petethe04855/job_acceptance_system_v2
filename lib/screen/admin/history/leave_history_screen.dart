@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_application_3/models/leave_mode.dart';
-import 'package:flutter_application_3/screen/admin/history/leave_details/leave_details_screen.dart';
-import 'package:flutter_application_3/services/leave_services.dart';
-import 'package:flutter_application_3/themes/colors.dart';
+import 'package:flutter_application_1/models/leave_mode.dart';
+import 'package:flutter_application_1/screen/admin/history/leave_details/leave_details_screen.dart';
+import 'package:flutter_application_1/services/leave_services.dart';
+import 'package:flutter_application_1/themes/colors.dart';
 
 class LeaveHistoryScreen extends StatefulWidget {
   final String userId;
@@ -49,63 +49,61 @@ class _LeaveHistoryScreenState extends State<LeaveHistoryScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Expanded(
-          child:
-              leaveList.isEmpty
-                  ? Center(
-                    child: Text(
-                      "ไม่มีประวัติการลา",
-                      style: TextStyle(color: secondaryText, fontSize: 16),
-                    ),
-                  )
-                  : ListView.builder(
-                    itemCount:
-                        leaveList
-                            .length, // Assume leaveList is your data source
-                    itemBuilder: (context, index) {
-                      final leave = leaveList[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Card(
-                          color: backgroundAccent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: ListTile(
-                            title: Text(
-                              "เหตุผล: ${leave.leaveType}",
-                              style: const TextStyle(
-                                color: primaryText,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: Text(
-                              "วันที่: ${DateFormat('dd/MM/yyyy').format(leave.date)}",
-                              style: const TextStyle(
-                                color: secondaryText,
-                                fontSize: 14,
-                              ),
-                            ),
-                            trailing: Icon(
-                              Icons.arrow_forward_ios,
-                              color: secondaryText,
-                            ),
-                            onTap: () {
-                              // Navigate to leave details screen
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return LeaveDetailsScreen(leave: leave);
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      );
-                    },
+          child: leaveList.isEmpty
+              ? Center(
+                  child: Text(
+                    "ไม่มีประวัติการลา",
+                    style: TextStyle(color: secondaryText, fontSize: 16),
                   ),
+                )
+              : ListView.builder(
+                  itemCount:
+                      leaveList.length, // Assume leaveList is your data source
+                  itemBuilder: (context, index) {
+                    final leave = leaveList[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Card(
+                        color: backgroundAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: ListTile(
+                          title: Text(
+                            "เหตุผล: ${leave.leaveType}",
+                            style: const TextStyle(
+                              color: primaryText,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Text(
+                            "วันที่: ${DateFormat('dd/MM/yyyy').format(leave.date)}",
+                            style: const TextStyle(
+                              color: secondaryText,
+                              fontSize: 14,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward_ios,
+                            color: secondaryText,
+                          ),
+                          onTap: () {
+                            // Navigate to leave details screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return LeaveDetailsScreen(leave: leave);
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
         ),
         // child: ListView.builder(
         //   itemCount: leaveList.length, // Assume leaveList is your data source

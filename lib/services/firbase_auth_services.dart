@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_application_3/models/user_model.dart';
+import 'package:flutter_application_1/models/user_model.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -128,11 +128,10 @@ class FirebaseAuthService {
 
   Future<UserModel?> getUser() async {
     try {
-      DocumentSnapshot doc =
-          await _firestore
-              .collection('Users')
-              .doc(_auth.currentUser!.uid)
-              .get();
+      DocumentSnapshot doc = await _firestore
+          .collection('Users')
+          .doc(_auth.currentUser!.uid)
+          .get();
       if (doc.exists) {
         return UserModel(
           uid: doc.id,

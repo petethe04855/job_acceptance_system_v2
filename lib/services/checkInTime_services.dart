@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_application_3/models/check_in_out_history_model.dart';
-import 'package:flutter_application_3/services/user_data_services.dart';
+import 'package:flutter_application_1/models/check_in_out_history_model.dart';
+import 'package:flutter_application_1/services/user_data_services.dart';
 
 class CheckInTimeServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -37,12 +37,11 @@ class CheckInTimeServices {
     double longitude,
   ) async {
     try {
-      QuerySnapshot querySnapshot =
-          await _firestore
-              .collection('checkInTimes')
-              .where('uid', isEqualTo: uid)
-              .where('checkOutTime', isNull: true)
-              .get();
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('checkInTimes')
+          .where('uid', isEqualTo: uid)
+          .where('checkOutTime', isNull: true)
+          .get();
 
       if (querySnapshot.docs.isNotEmpty) {
         // Assuming the first document is the one to update
@@ -61,12 +60,11 @@ class CheckInTimeServices {
 
   Future<CheckInOutHistoryModel?> getCheckInStatus(String uid) async {
     try {
-      QuerySnapshot querySnapshot =
-          await _firestore
-              .collection('checkInTimes')
-              .where('uid', isEqualTo: uid)
-              .where('checkOutTime', isNull: true)
-              .get();
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('checkInTimes')
+          .where('uid', isEqualTo: uid)
+          .where('checkOutTime', isNull: true)
+          .get();
 
       if (querySnapshot.docs.isNotEmpty) {
         var doc = querySnapshot.docs.first;
@@ -88,12 +86,11 @@ class CheckInTimeServices {
   Future<List<CheckInOutHistoryModel>> getWorkHistory(String uid) async {
     List<CheckInOutHistoryModel> workHistory = [];
     try {
-      QuerySnapshot querySnapshot =
-          await _firestore
-              .collection('checkInTimes')
-              .where('uid', isEqualTo: uid)
-              .orderBy('checkInTime', descending: true)
-              .get();
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('checkInTimes')
+          .where('uid', isEqualTo: uid)
+          .orderBy('checkInTime', descending: true)
+          .get();
 
       for (var doc in querySnapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -102,10 +99,9 @@ class CheckInTimeServices {
           CheckInOutHistoryModel(
             userId: data['uid'],
             checkInTime: (data['checkInTime'] as Timestamp).toDate(),
-            checkOutTime:
-                data['checkOutTime'] != null
-                    ? (data['checkOutTime'] as Timestamp).toDate()
-                    : null,
+            checkOutTime: data['checkOutTime'] != null
+                ? (data['checkOutTime'] as Timestamp).toDate()
+                : null,
             date: data['date'],
             latitude: data['latitude'], // เพิ่ม latitude
             longitude: data['longitude'], // เพิ่ม longitude

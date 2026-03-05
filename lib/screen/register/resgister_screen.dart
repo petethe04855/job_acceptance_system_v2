@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_application_3/app_router.dart';
-import 'package:flutter_application_3/components/custom_textfield.dart';
-import 'package:flutter_application_3/services/firbase_auth_services.dart';
-import 'package:flutter_application_3/themes/colors.dart';
+import 'package:flutter_application_1/app_router.dart';
+import 'package:flutter_application_1/components/custom_textfield.dart';
+import 'package:flutter_application_1/services/firbase_auth_services.dart';
+import 'package:flutter_application_1/themes/colors.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -109,18 +109,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: CircleAvatar(
                             radius: 50,
                             backgroundColor: Colors.grey,
-                            backgroundImage:
-                                _imageFile != null
-                                    ? FileImage(_imageFile!)
-                                    : null,
-                            child:
-                                _imageFile == null
-                                    ? const Icon(
-                                      Icons.camera_alt,
-                                      color: Colors.white,
-                                      size: 50,
-                                    )
-                                    : null,
+                            backgroundImage: _imageFile != null
+                                ? FileImage(_imageFile!)
+                                : null,
+                            child: _imageFile == null
+                                ? const Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.white,
+                                    size: 50,
+                                  )
+                                : null,
                           ),
                         ),
                         const Row(
@@ -209,10 +207,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           suffixIcon: IconButton(
                             color: Colors.white,
                             onPressed: passwordfunction,
-                            icon:
-                                !_isObscure
-                                    ? const Icon(Icons.visibility_off)
-                                    : const Icon(Icons.visibility),
+                            icon: !_isObscure
+                                ? const Icon(Icons.visibility_off)
+                                : const Icon(Icons.visibility),
                           ),
                           obscureText: !_isObscure,
                           validator: (value) {
@@ -242,10 +239,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           suffixIcon: IconButton(
                             color: Colors.white,
                             onPressed: passwordConfirmfunction,
-                            icon:
-                                !_isObscure2
-                                    ? const Icon(Icons.visibility_off)
-                                    : const Icon(Icons.visibility),
+                            icon: !_isObscure2
+                                ? const Icon(Icons.visibility_off)
+                                : const Icon(Icons.visibility),
                           ),
                           obscureText: !_isObscure2,
                           validator: (value) {

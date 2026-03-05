@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_application_3/models/tasks_model.dart';
+import 'package:flutter_application_1/models/tasks_model.dart';
 
 class TaskServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -81,29 +81,26 @@ class TaskServices {
   Future<List<TasksModel>> getTasks() async {
     try {
       QuerySnapshot querySnapshot = await _firestore.collection('tasks').get();
-      tasks =
-          querySnapshot.docs.map((doc) {
-            final data =
-                doc.data()
-                    as Map<String, dynamic>; // ✅ ใช้ Map<String, dynamic>
+      tasks = querySnapshot.docs.map((doc) {
+        final data =
+            doc.data() as Map<String, dynamic>; // ✅ ใช้ Map<String, dynamic>
 
-            return TasksModel(
-              taskId: doc.id,
-              name: data['name'],
-              description: data['description'],
-              image: data['imageUrl'],
-              taskStatus: data['taskStatus'],
-              uidUser: data['uidUser'],
-              quality: (data['quality'] as num).toDouble(),
-              manners: (data['manners'] as num).toDouble(),
-              time: (data['time'] as num).toDouble(),
-              suggestion: data['suggestion'] ?? '',
-              fileName:
-                  data.containsKey('fileURL')
-                      ? data['fileURL']
-                      : '', // ✅ ป้องกัน Error
-            );
-          }).toList();
+        return TasksModel(
+          taskId: doc.id,
+          name: data['name'],
+          description: data['description'],
+          image: data['imageUrl'],
+          taskStatus: data['taskStatus'],
+          uidUser: data['uidUser'],
+          quality: (data['quality'] as num).toDouble(),
+          manners: (data['manners'] as num).toDouble(),
+          time: (data['time'] as num).toDouble(),
+          suggestion: data['suggestion'] ?? '',
+          fileName: data.containsKey('fileURL')
+              ? data['fileURL']
+              : '', // ✅ ป้องกัน Error
+        );
+      }).toList();
 
       return tasks;
     } catch (e) {
@@ -114,38 +111,35 @@ class TaskServices {
 
   Future<List<TasksModel>> getTaskStatus(String status) async {
     try {
-      QuerySnapshot querySnapshot =
-          await _firestore
-              .collection('tasks')
-              .where('taskStatus', isEqualTo: status)
-              .get();
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('tasks')
+          .where('taskStatus', isEqualTo: status)
+          .get();
 
-      tasks =
-          querySnapshot.docs.map((doc) {
-            final data =
-                doc.data()
-                    as Map<
-                      String,
-                      dynamic
-                    >; // ✅ ใช้ Map<String, dynamic> ป้องกัน type error
+      tasks = querySnapshot.docs.map((doc) {
+        final data =
+            doc.data()
+                as Map<
+                  String,
+                  dynamic
+                >; // ✅ ใช้ Map<String, dynamic> ป้องกัน type error
 
-            return TasksModel(
-              taskId: doc.id,
-              name: data['name'],
-              description: data['description'],
-              image: data['imageUrl'], // ✅ URL ของรูปภาพ
-              taskStatus: data['taskStatus'],
-              uidUser: data['uidUser'],
-              quality: (data['quality'] as num).toDouble(),
-              manners: (data['manners'] as num).toDouble(),
-              time: (data['time'] as num).toDouble(),
-              suggestion: data['suggestion'] ?? '',
-              fileName:
-                  data.containsKey('fileURL')
-                      ? data['fileURL']
-                      : null, // ✅ ตรวจสอบก่อนดึงค่า
-            );
-          }).toList();
+        return TasksModel(
+          taskId: doc.id,
+          name: data['name'],
+          description: data['description'],
+          image: data['imageUrl'], // ✅ URL ของรูปภาพ
+          taskStatus: data['taskStatus'],
+          uidUser: data['uidUser'],
+          quality: (data['quality'] as num).toDouble(),
+          manners: (data['manners'] as num).toDouble(),
+          time: (data['time'] as num).toDouble(),
+          suggestion: data['suggestion'] ?? '',
+          fileName: data.containsKey('fileURL')
+              ? data['fileURL']
+              : null, // ✅ ตรวจสอบก่อนดึงค่า
+        );
+      }).toList();
 
       return tasks;
     } catch (e) {
@@ -201,12 +195,11 @@ class TaskServices {
 
   Future<List<TasksModel>> getTasksByUid(String uid) async {
     try {
-      QuerySnapshot querySnapshot =
-          await _firestore
-              .collection('tasks')
-              .where('uidUser', isEqualTo: uid)
-              .where('taskStatus', isEqualTo: 'รับงานแล้ว')
-              .get();
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('tasks')
+          .where('uidUser', isEqualTo: uid)
+          .where('taskStatus', isEqualTo: 'รับงานแล้ว')
+          .get();
 
       return querySnapshot.docs.map((doc) {
         return TasksModel(
@@ -231,38 +224,35 @@ class TaskServices {
 
   Future<List<TasksModel>> getTasksByStatus(String uid) async {
     try {
-      QuerySnapshot querySnapshot =
-          await _firestore
-              .collection('tasks')
-              .where('uidUser', isEqualTo: uid)
-              .get();
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('tasks')
+          .where('uidUser', isEqualTo: uid)
+          .get();
 
-      tasks =
-          querySnapshot.docs.map((doc) {
-            final data =
-                doc.data()
-                    as Map<
-                      String,
-                      dynamic
-                    >; // ✅ ใช้ Map<String, dynamic> ป้องกัน type error
+      tasks = querySnapshot.docs.map((doc) {
+        final data =
+            doc.data()
+                as Map<
+                  String,
+                  dynamic
+                >; // ✅ ใช้ Map<String, dynamic> ป้องกัน type error
 
-            return TasksModel(
-              taskId: doc.id,
-              name: data['name'],
-              description: data['description'],
-              image: data['imageUrl'], // ✅ URL ของรูปภาพ
-              taskStatus: data['taskStatus'],
-              uidUser: data['uidUser'],
-              quality: (data['quality'] as num).toDouble(),
-              manners: (data['manners'] as num).toDouble(),
-              time: (data['time'] as num).toDouble(),
-              suggestion: data['suggestion'] ?? '',
-              fileName:
-                  data.containsKey('fileURL')
-                      ? data['fileURL']
-                      : null, // ✅ ตรวจสอบก่อนดึงค่า
-            );
-          }).toList();
+        return TasksModel(
+          taskId: doc.id,
+          name: data['name'],
+          description: data['description'],
+          image: data['imageUrl'], // ✅ URL ของรูปภาพ
+          taskStatus: data['taskStatus'],
+          uidUser: data['uidUser'],
+          quality: (data['quality'] as num).toDouble(),
+          manners: (data['manners'] as num).toDouble(),
+          time: (data['time'] as num).toDouble(),
+          suggestion: data['suggestion'] ?? '',
+          fileName: data.containsKey('fileURL')
+              ? data['fileURL']
+              : null, // ✅ ตรวจสอบก่อนดึงค่า
+        );
+      }).toList();
 
       return tasks;
     } catch (e) {

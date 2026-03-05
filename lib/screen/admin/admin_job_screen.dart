@@ -1,13 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_3/models/tasks_model.dart';
-import 'package:flutter_application_3/models/user_model.dart';
-import 'package:flutter_application_3/screen/admin/admin_submit_work.dart';
-import 'package:flutter_application_3/screen/admin/edit_screen.dart';
-import 'package:flutter_application_3/services/user_data_services.dart';
-import 'package:flutter_application_3/themes/colors.dart';
-import 'package:flutter_application_3/utils/utility.dart';
+import 'package:flutter_application_1/models/tasks_model.dart';
+import 'package:flutter_application_1/models/user_model.dart';
+import 'package:flutter_application_1/screen/admin/admin_submit_work.dart';
+import 'package:flutter_application_1/screen/admin/edit_screen.dart';
+import 'package:flutter_application_1/services/user_data_services.dart';
+import 'package:flutter_application_1/themes/colors.dart';
+import 'package:flutter_application_1/utils/utility.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AdminJobScreen extends StatefulWidget {
@@ -128,16 +128,16 @@ class _AdminJobScreenState extends State<AdminJobScreen> {
                       const SizedBox(height: 20),
                       userJob == null
                           ? Text(
-                            "ยังไม่มีผู้รับงาน",
-                            style: TextStyle(color: backgroundText),
-                          )
+                              "ยังไม่มีผู้รับงาน",
+                              style: TextStyle(color: backgroundText),
+                            )
                           : Text(
-                            'ผู้รับงาน: ${userJob?.firstname} ${userJob?.lastname}',
-                            style: TextStyle(
-                              color: backgroundText,
-                              fontWeight: FontWeight.bold,
+                              'ผู้รับงาน: ${userJob?.firstname} ${userJob?.lastname}',
+                              style: TextStyle(
+                                color: backgroundText,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
 
                       // fileName
                       if (widget.tasksData.fileName != null &&

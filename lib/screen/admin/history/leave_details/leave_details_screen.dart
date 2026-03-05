@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_application_3/models/leave_mode.dart';
-import 'package:flutter_application_3/themes/colors.dart';
+import 'package:flutter_application_1/models/leave_mode.dart';
+import 'package:flutter_application_1/themes/colors.dart';
 
 class LeaveDetailsScreen extends StatefulWidget {
   final LeaveModel leave;

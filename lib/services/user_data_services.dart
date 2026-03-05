@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_application_3/models/user_model.dart';
-import 'package:flutter_application_3/utils/utility.dart';
+import 'package:flutter_application_1/models/user_model.dart';
+import 'package:flutter_application_1/utils/utility.dart';
 
 class UserDataServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -8,56 +8,51 @@ class UserDataServices {
   var userData;
 
   Future<List<UserModel>> getUserData() async {
-    QuerySnapshot querySnapshot =
-        await _firestore
-            .collection('Users')
-            .where('role', isEqualTo: 'นักศึกษา')
-            .get();
+    QuerySnapshot querySnapshot = await _firestore
+        .collection('Users')
+        .where('role', isEqualTo: 'นักศึกษา')
+        .get();
 
-    userData =
-        querySnapshot.docs.map((doc) {
-          return UserModel(
-            uid: doc['uid'],
-            image: doc['image'],
-            firstname: doc['firstname'],
-            lastname: doc['lastname'],
-            email: doc['email'],
-            role: doc['role'],
-          );
-        }).toList();
+    userData = querySnapshot.docs.map((doc) {
+      return UserModel(
+        uid: doc['uid'],
+        image: doc['image'],
+        firstname: doc['firstname'],
+        lastname: doc['lastname'],
+        email: doc['email'],
+        role: doc['role'],
+      );
+    }).toList();
 
     return userData;
   }
 
   Future<List<UserModel>> getUserDataByRole(String role) async {
-    QuerySnapshot querySnapshot =
-        await _firestore
-            .collection('Users')
-            .where('role', isEqualTo: role)
-            .get();
+    QuerySnapshot querySnapshot = await _firestore
+        .collection('Users')
+        .where('role', isEqualTo: role)
+        .get();
 
-    userData =
-        querySnapshot.docs.map((doc) {
-          return UserModel(
-            uid: doc['uid'],
-            image: doc['image'],
-            firstname: doc['firstname'],
-            lastname: doc['lastname'],
-            email: doc['email'],
-            role: doc['role'],
-          );
-        }).toList();
+    userData = querySnapshot.docs.map((doc) {
+      return UserModel(
+        uid: doc['uid'],
+        image: doc['image'],
+        firstname: doc['firstname'],
+        lastname: doc['lastname'],
+        email: doc['email'],
+        role: doc['role'],
+      );
+    }).toList();
 
     return userData;
   }
 
   Future<UserModel?> getUserById(String uid) async {
     try {
-      QuerySnapshot querySnapshot =
-          await _firestore
-              .collection('Users')
-              .where('uid', isEqualTo: uid)
-              .get();
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('Users')
+          .where('uid', isEqualTo: uid)
+          .get();
 
       if (querySnapshot.docs.isNotEmpty) {
         var doc = querySnapshot.docs.first;
