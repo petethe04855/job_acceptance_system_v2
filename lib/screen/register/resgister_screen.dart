@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_application_1/app_router.dart';
@@ -21,11 +22,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _isObscure = false;
   bool _isObscure2 = false;
 
-  final _emailController = TextEditingController(text: 'test@gmail.com');
-  final _passwordController = TextEditingController(text: '123456');
-  final _confirmPasswordController = TextEditingController(text: '123456');
-  final _firstnameController = TextEditingController(text: 'test');
-  final _lastnameController = TextEditingController(text: 'test');
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _firstnameController = TextEditingController();
+  final _lastnameController = TextEditingController();
 
   File? _imageFile; // To hold the selected image
 
@@ -138,8 +139,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "กรุณากรอกอีเมล";
-                            } else if (!value.contains("@")) {
-                              return "กรุณากรอกอีเมลให้ถูกต้อง";
+                            } else if (!RegExp(
+                              r'^[\w\.\+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}$',
+                            ).hasMatch(value)) {
+                              return "รูปแบบอีเมลไม่ถูกต้อง เช่น example@email.com";
                             }
                             return null;
                           },
@@ -217,6 +220,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               return "กรุณากรอกรหัสผ่าน";
                             } else if (value.length < 6) {
                               return "กรุณากรอกรหัสผ่านอย่างน้อย 6 ตัวอักษร";
+                            } else if (!RegExp(r'[a-z]').hasMatch(value)) {
+                              return "รหัสผ่านต้องมีตัวพิมพ์เล็กอย่างน้อย 1 ตัว (a-z)";
+                            } else if (!RegExp(r'[A-Z]').hasMatch(value)) {
+                              return "รหัสผ่านต้องมีตัวพิมพ์ใหญ่อย่างน้อย 1 ตัว (A-Z)";
+                            } else if (!RegExp(r'[0-9]').hasMatch(value)) {
+                              return "รหัสผ่านต้องมีตัวเลขอย่างน้อย 1 ตัว";
                             }
                             return null;
                           },
@@ -247,8 +256,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "กรุณากรอกรหัสผ่าน";
-                            } else if (value.length < 6) {
-                              return "กรุณากรอกรหัสผ่านอย่างน้อย 6 ตัวอักษร";
+                            } else if (value != _passwordController.text) {
+                              return "รหัสผ่านไม่ตรงกัน";
                             }
                             return null;
                           },
@@ -269,19 +278,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             if (registerKey.currentState!.validate()) {
                               // Logic to upload the selected image and then create the user
                               if (_imageFile != null) {
-                                // Upload image logic here
-                                await _auth.sigUpWithEmailAndPassWord(
-                                  _emailController.text,
-                                  _imageFile,
-                                  _passwordController.text,
-                                  _confirmPasswordController.text,
-                                  _firstnameController.text,
-                                  _lastnameController.text,
-                                );
-                                Navigator.pushNamed(context, AppRouter.login);
+                                try {
+                                  await _auth.sigUpWithEmailAndPassWord(
+                                    _emailController.text,
+                                    _imageFile,
+                                    _passwordController.text,
+                                    _confirmPasswordController.text,
+                                    _firstnameController.text,
+                                    _lastnameController.text,
+                                  );
+                                  Navigator.pushNamed(context, AppRouter.login);
+                                } on FirebaseAuthException catch (e) {
+                                  if (e.code == 'email-already-in-use') {
+                                    _showSnackbar(
+                                      'อีเมลนี้ถูกใช้งานแล้ว กรุณาใช้อีเมลอื่น',
+                                    );
+                                  } else {
+                                    _showSnackbar(
+                                      'เกิดข้อผิดพลาด: ${e.message}',
+                                    );
+                                  }
+                                } catch (e) {
+                                  _showSnackbar('เกิดข้อผิดพลาดที่ไม่คาดคิด');
+                                }
                               } else {
                                 // Show error message
-                                print('Please select an image');
+                                _showSnackbar('กรุณาเลือกรูปโปรไฟล์');
                               }
                             }
                           },
@@ -300,7 +322,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               height: 55,
                               alignment: Alignment.center,
                               child: const Text(
-                                "เข้าสู่ระบบ",
+                                "สมัครสมาชิก",
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.white,

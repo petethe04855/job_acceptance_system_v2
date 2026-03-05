@@ -22,6 +22,7 @@ class _CheckScreenState extends State<CheckScreen> {
   final CheckInTimeServices _checkInTimeServices = CheckInTimeServices();
   List<CheckInOutHistoryModel> workHistory = [];
   bool isCheckedIn = false;
+  bool _isLoading = false; // loading state สำหรับปุ่ม
   DateTime? checkInTime;
   Position? _currentPosition; // เก็บตำแหน่งปัจจุบัน
 
@@ -95,43 +96,69 @@ class _CheckScreenState extends State<CheckScreen> {
     }
   }
 
-  void _handleCheckIn(String date) async {
+  Future<void> _handleCheckIn(String date) async {
+    if (_isLoading) return;
+    setState(() => _isLoading = true); // ✅ UI เปลี่ยนทันที
     DateTime now = DateTime.now();
-    await _getCurrentLocation(); // ดึงตำแหน่งเมื่อเช็กอิน
-    if (_currentPosition != null) {
-      await _checkInTimeServices.checkIn(
-        now,
-        date,
-        widget.uid,
-        _currentPosition!.latitude, // เก็บ latitude
-        _currentPosition!.longitude, // เก็บ longitude
-      );
-      if (mounted) {
-        // Check if the widget is still mounted
-        setState(() {
-          isCheckedIn = true;
-          checkInTime = now;
-        });
+    try {
+      await _getCurrentLocation();
+      if (_currentPosition != null) {
+        await _checkInTimeServices.checkIn(
+          now,
+          date,
+          widget.uid,
+          _currentPosition!.latitude,
+          _currentPosition!.longitude,
+        );
+        if (mounted) {
+          setState(() {
+            isCheckedIn = true;
+            checkInTime = now;
+          });
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('ไม่สามารถดึงตำแหน่งได้ กรุณาเปิด GPS และลองใหม่'),
+            ),
+          );
+        }
       }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  void _handleCheckOut() async {
+  Future<void> _handleCheckOut() async {
+    if (_isLoading) return;
+    setState(() => _isLoading = true); // ✅ UI เปลี่ยนทันที
     DateTime now = DateTime.now();
-    await _getCurrentLocation(); // ดึงตำแหน่งเมื่อเช็กเอาต์
-    if (_currentPosition != null) {
-      await _checkInTimeServices.checkOut(
-        now,
-        widget.uid,
-        _currentPosition!.latitude, // เก็บ latitude
-        _currentPosition!.longitude, // เก็บ longitude
-      );
-      if (mounted) {
-        // Check if the widget is still mounted
-        setState(() {
-          isCheckedIn = false;
-        });
+    try {
+      await _getCurrentLocation();
+      if (_currentPosition != null) {
+        await _checkInTimeServices.checkOut(
+          now,
+          widget.uid,
+          _currentPosition!.latitude,
+          _currentPosition!.longitude,
+        );
+        if (mounted) {
+          setState(() {
+            isCheckedIn = false;
+          });
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('ไม่สามารถดึงตำแหน่งได้ กรุณาเปิด GPS และลองใหม่'),
+            ),
+          );
+        }
       }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -173,7 +200,7 @@ class _CheckScreenState extends State<CheckScreen> {
               children: [
                 isCheckedIn
                     ? ElevatedButton(
-                        onPressed: _handleCheckOut,
+                        onPressed: _isLoading ? null : _handleCheckOut,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
                           padding: const EdgeInsets.symmetric(
@@ -181,15 +208,27 @@ class _CheckScreenState extends State<CheckScreen> {
                             vertical: 15,
                           ),
                         ),
-                        child: const Text(
-                          "ลงออกเวลา",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
+                        child: _isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text(
+                                "ลงออกเวลา",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
                       )
                     : ElevatedButton(
-                        onPressed: () {
-                          _handleCheckIn(formattedDate);
-                        },
+                        onPressed: _isLoading
+                            ? null
+                            : () => _handleCheckIn(formattedDate),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: secondary,
                           padding: const EdgeInsets.symmetric(
@@ -197,10 +236,22 @@ class _CheckScreenState extends State<CheckScreen> {
                             vertical: 15,
                           ),
                         ),
-                        child: const Text(
-                          "ลงเวลา",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
+                        child: _isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text(
+                                "ลงเวลา",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
                       ),
               ],
             ),

@@ -12,9 +12,9 @@ class ApproveLeaveScreen extends StatefulWidget {
 }
 
 class _ApproveLeaveScreenState extends State<ApproveLeaveScreen> {
-  LeaveServices _leaveServices = LeaveServices();
-  Utility _utility = Utility();
-  List<LeaveModel> _leaves = [];
+  final LeaveServices _leaveServices = LeaveServices();
+  final Utility _utility = Utility();
+  final List<LeaveModel> _leaves = [];
 
   @override
   void initState() {
@@ -25,29 +25,34 @@ class _ApproveLeaveScreenState extends State<ApproveLeaveScreen> {
   Future<void> _loadLeaves() async {
     try {
       var fetchedLeaves = await _leaveServices.getLeavesByStatus();
+      if (!mounted) return;
       setState(() {
-        _leaves = fetchedLeaves;
+        _leaves.clear();
+        _leaves.addAll(fetchedLeaves);
         _utility.logger.d(_leaves.length);
       });
     } catch (e) {
       _utility.logger.e('Error loading leaves: $e');
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Failed to load leaves')));
+      ).showSnackBar(const SnackBar(content: Text('โหลดข้อมูลการลาไม่สำเร็จ')));
     }
   }
 
   Future<void> _approveLeave(String userId) async {
     try {
       await _leaveServices.updateLeaveStatusByUid(userId);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Leave approved successfully')));
-      _loadLeaves(); // Reload the list to reflect the changes
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('อนุมัติการลาเรียบร้อยแล้ว')),
+      );
+      _loadLeaves();
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Failed to approve leave')));
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('อนุมัติการลาไม่สำเร็จ โปรดลองอีกครั้ง')),
+      );
     }
   }
 

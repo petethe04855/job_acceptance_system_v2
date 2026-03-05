@@ -30,18 +30,31 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   Future<void> addTask() async {
     if (addFormKey.currentState!.validate()) {
-      await _taskServices.uploadProduct(
-        _image,
-        _nameController.text,
-        _descriptionController.text,
-      );
-      Navigator.pop(context);
+      if (_image == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('กรุณาเลือกรูปภาพสำหรับงาน')),
+        );
+        return;
+      }
+      try {
+        await _taskServices.uploadProduct(
+          _image,
+          _nameController.text,
+          _descriptionController.text,
+        );
+        if (!mounted) return;
+        Navigator.pop(context);
+      } catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('เพิ่มงานไม่สำเร็จ โปรดลองอีกครั้ง')),
+        );
+      }
     }
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _nameController.dispose();
     _descriptionController.dispose();
     super.dispose();
@@ -63,51 +76,55 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              GestureDetector(
-                onTap: getImage,
-                child: _image == null
-                    ? Icon(Icons.image, size: 100)
-                    : Image.file(_image!, height: 100, width: 100),
-              ),
-              SizedBox(height: 10),
-              ElevatedButton(onPressed: getImage, child: Text('เลือกรูปภาพ')),
-              SizedBox(height: 20),
-              customTextField(
-                controller: _nameController,
-                hintText: 'ชื่องาน',
-                prefixIcon: null,
-                textStyleColor: primaryText,
-                obscureText: false,
-                suffixIcon: null,
-                onSaved: (p0) {},
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'กรุณากรอกชื่องาน';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              customTextFormFieldDetails(
-                controller: _descriptionController,
-                maxLines: 5,
-                hintText: 'รายละเอียดงาน',
-                prefixIcon: null,
-                textStyleColor: primaryText,
-                onTap: () {},
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  _taskServices.uploadProduct(
-                    _image,
-                    _nameController.text,
-                    _descriptionController.text,
-                  );
-                  Navigator.pop(context);
-                },
-                child: Text('เพิ่มงาน'),
+            children: [
+              Form(
+                key: addFormKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: getImage,
+                      child: _image == null
+                          ? const Icon(Icons.image, size: 100)
+                          : Image.file(_image!, height: 100, width: 100),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: getImage,
+                      child: const Text('เลือกรูปภาพ'),
+                    ),
+                    const SizedBox(height: 20),
+                    customTextField(
+                      controller: _nameController,
+                      hintText: 'ชื่องาน',
+                      prefixIcon: null,
+                      textStyleColor: primaryText,
+                      obscureText: false,
+                      suffixIcon: null,
+                      onSaved: (p0) {},
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'กรุณากรอกชื่องาน';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    customTextFormFieldDetails(
+                      controller: _descriptionController,
+                      maxLines: 5,
+                      hintText: 'รายละเอียดงาน',
+                      prefixIcon: null,
+                      textStyleColor: primaryText,
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: addTask,
+                      child: const Text('เพิ่มงาน'),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

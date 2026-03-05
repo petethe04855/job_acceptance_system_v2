@@ -21,18 +21,23 @@ class AdminSubmitWork extends StatefulWidget {
 
 class _AdminSubmitWorkState extends State<AdminSubmitWork> {
   final TaskServices _taskServices = TaskServices();
-
   final _detailsController = TextEditingController();
   double quality = 3.0;
   double manners = 3.0;
   double time = 3.0;
 
   @override
+  void dispose() {
+    _detailsController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primary,
       appBar: AppBar(
-        title: const Text('ส่งงาน'),
+        title: const Text('ประเมินงาน'),
         backgroundColor: primary,
         foregroundColor: primaryText,
       ),
@@ -77,15 +82,30 @@ class _AdminSubmitWorkState extends State<AdminSubmitWork> {
                     backgroundColor: secondary,
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                   ),
-                  onPressed: () {
-                    _taskServices.upTaskSubmit(
-                      widget.tasksData.taskId,
-                      quality,
-                      manners,
-                      time,
-                      _detailsController.text,
-                    );
-                    Navigator.popAndPushNamed(context, '/meun_admin_screen');
+                  onPressed: () async {
+                    try {
+                      await _taskServices.upTaskSubmit(
+                        widget.tasksData.taskId,
+                        quality,
+                        manners,
+                        time,
+                        _detailsController.text,
+                      );
+                      if (!mounted) return;
+                      Navigator.pop(
+                        context,
+                        true,
+                      ); // ✅ ส่งสัญญาณว่าประเมินสำเร็จ
+                    } catch (e) {
+                      if (!mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'บันทึกการประเมินไม่สำเร็จ โปรดลองอีกครั้ง',
+                          ),
+                        ),
+                      );
+                    }
                   },
                   child: Text(
                     "ส่งประเมิน",

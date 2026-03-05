@@ -17,6 +17,13 @@ class _SubmitWorkScreenState extends State<SubmitWorkScreen> {
   double quality = 3.0;
   double manners = 3.0;
   double time = 3.0;
+
+  @override
+  void dispose() {
+    _detailsController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

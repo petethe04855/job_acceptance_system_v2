@@ -26,7 +26,7 @@ class _ResWorkScreenState extends State<ResWorkScreen> {
     try {
       await _taskServices.getTasksByUid(widget.user.uid);
     } catch (e) {
-      print('Error loading tasks: $e');
+      debugPrint('Error loading tasks: $e');
     }
   }
 

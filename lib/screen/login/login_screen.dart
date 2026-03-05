@@ -23,6 +23,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   void passwordfunction() {
     setState(() {
       _isObscure = !_isObscure;
@@ -51,45 +58,47 @@ class _LoginScreenState extends State<LoginScreen> {
               userSnapshot.data() as Map<String, dynamic>;
           String role = userData['role'];
 
+          if (!mounted) return;
           if (role == 'admin') {
-            // Navigate to the admin screen
             Navigator.pushNamed(context, AppRouter.meunAdmin);
           } else if (role == 'นักศึกษา') {
-            // Navigate to the user screen
             Navigator.pushNamed(context, AppRouter.meun);
           } else {
-            // Handle other roles or default
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('ไม่พบสิทธิ์การใช้งานที่ถูกต้อง')),
+              const SnackBar(content: Text('ไม่พบสิทธิ์การใช้งานที่ถูกต้อง')),
             );
           }
         } else {
-          // Handle the case where no role is found
+          if (!mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('เกิดข้อผิดพลาดในการดึงข้อมูลสิทธิ์')),
+            const SnackBar(content: Text('เกิดข้อผิดพลาดในการดึงข้อมูลสิทธิ์')),
           );
         }
       } on FirebaseAuthException catch (e) {
-        // Handle login errors like wrong-password or user-not-found
         String errorMessage;
         if (e.code == 'user-not-found') {
           errorMessage = 'ไม่พบบัญชีนี้';
         } else if (e.code == 'wrong-password') {
           errorMessage = 'รหัสผ่านไม่ถูกต้อง';
+        } else if (e.code == 'invalid-credential') {
+          errorMessage = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
         } else if (e.code == 'invalid-email') {
           errorMessage = 'รูปแบบอีเมลไม่ถูกต้อง';
+        } else if (e.code == 'user-disabled') {
+          errorMessage = 'บัญชีนี้ถูกระงับการใช้งาน';
+        } else if (e.code == 'too-many-requests') {
+          errorMessage = 'ลองเข้าสู่ระบบมากเกินไป กรุณารอสักครู่';
         } else {
-          errorMessage = 'เกิดข้อผิดพลาด โปรดลองอีกครั้ง';
+          errorMessage = 'เกิดข้อผิดพลาด: ${e.message}';
         }
-
-        // Show error message using a SnackBar
+        if (!mounted) return;
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(errorMessage)));
       } catch (e) {
-        // Handle general errors
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('เกิดข้อผิดพลาด โปรดลองอีกครั้ง')),
+          const SnackBar(content: Text('เกิดข้อผิดพลาด โปรดลองอีกครั้ง')),
         );
       }
     }
@@ -152,8 +161,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "กรุณากรอกอีเมล";
-                            } else if (!value.contains("@")) {
-                              return "กรุณากรอกอีเมลให้ถูกต้อง";
+                            } else if (!RegExp(
+                              r'^[\w\.\+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}$',
+                            ).hasMatch(value)) {
+                              return "รูปแบบอีเมลไม่ถูกต้อง เช่น example@email.com";
                             }
                             return null;
                           },

@@ -36,19 +36,26 @@ class _AdminJobScreenState extends State<AdminJobScreen> {
 
   Future<void> getUserJob() async {
     try {
-      userJob = await _userDataServices.getUserById(widget.tasksData.uidUser);
-
-      setState(() {});
+      final result = await _userDataServices.getUserById(
+        widget.tasksData.uidUser,
+      );
+      if (!mounted) return;
+      setState(() {
+        userJob = result;
+      });
     } catch (e) {
       Utility().logger.e(e);
     }
   }
 
   Future<void> downloadFile(String fileURL) async {
-    final Uri url = Uri.parse(fileURL); // แปลง String เป็น Uri
-
+    final Uri url = Uri.parse(fileURL);
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-      print('❌ ไม่สามารถเปิดลิงก์ได้: $fileURL');
+      Utility().logger.e('❌ ไม่สามารถเปิดลิงก์ได้: $fileURL');
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('ไม่สามารถเปิดไฟล์ได้')));
     }
   }
 
@@ -165,7 +172,7 @@ class _AdminJobScreenState extends State<AdminJobScreen> {
             if (widget.tasksData.taskStatus == 'รอรับงาน') ...[
               ElevatedButton(
                 onPressed: () {
-                  print('กดปุ่มแก้ไขงาน');
+                  Utility().logger.d('กดปุ่มแก้ไขงาน');
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -175,25 +182,31 @@ class _AdminJobScreenState extends State<AdminJobScreen> {
                     ),
                   );
                 },
-                child: Text('แก้ไขงาน'),
+                child: const Text('แก้ไขงาน'),
               ),
             ],
             if (widget.tasksData.taskStatus == 'ส่งงานสำเร็จ') ...[
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return AdminSubmitWork(
-                          tasksData: widget.tasksData,
-                          user: userJob!,
+                onPressed: userJob == null
+                    ? null
+                    : () async {
+                        final result = await Navigator.push<bool>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return AdminSubmitWork(
+                                tasksData: widget.tasksData,
+                                user: userJob!,
+                              );
+                            },
+                          ),
                         );
+                        // ✅ ถ้าประเมินสำเร็จ → pop กลับพร้อมบอก MeunAdminScreen ให้ reload
+                        if (result == true && mounted) {
+                          Navigator.pop(context, true);
+                        }
                       },
-                    ),
-                  );
-                },
-                child: Text('ประเมิน'),
+                child: const Text('ประเมิน'),
               ),
             ],
 

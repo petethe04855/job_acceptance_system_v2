@@ -96,14 +96,18 @@ class _MeunAdminScreenState extends State<MeunAdminScreen> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
+                      onTap: () async {
+                        final result = await Navigator.push<bool>(
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
                                 AdminJobScreen(tasksData: task, user: _user),
                           ),
                         );
+                        // ✅ โหลดข้อมูลใหม่ถ้ามีการเปลี่ยนแปลง (เช่น ประเมินสำเร็จ)
+                        if (result == true) {
+                          _loadTasks();
+                        }
                       },
                       child: Card(
                         child: ListTile(

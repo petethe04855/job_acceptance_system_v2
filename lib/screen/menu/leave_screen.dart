@@ -16,8 +16,8 @@ class LeaveScreen extends StatefulWidget {
 class _LeaveScreenState extends State<LeaveScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  LeaveServices _leaveServices = LeaveServices();
-  Utility _utility = Utility();
+  final LeaveServices _leaveServices = LeaveServices();
+  final Utility _utility = Utility();
 
   List<LeaveModel> _leaves = [];
   List<LeaveModel> _leavesByUserId = [];
@@ -43,11 +43,18 @@ class _LeaveScreenState extends State<LeaveScreen> {
     _loadLeavesByUserId();
   }
 
+  @override
+  void dispose() {
+    _leave.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadLeavesByUserId() async {
     try {
       var fetchedLeaves = await _leaveServices.getLeavesByUserId(
         _auth.currentUser!.uid,
       );
+      if (!mounted) return;
       setState(() {
         _leavesByUserId = fetchedLeaves;
       });
@@ -59,17 +66,18 @@ class _LeaveScreenState extends State<LeaveScreen> {
   Future<void> _loadPendingLeaves() async {
     try {
       var pendingLeaves = await _leaveServices.getPendingLeaves();
+      if (!mounted) return;
       setState(() {
         _leaves = pendingLeaves;
       });
     } catch (e) {
-      print('Error loading pending leaves: $e');
+      _utility.logger.e('Error loading pending leaves: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("id: ${_auth.currentUser!.uid}");
+    _utility.logger.d("uid: ${_auth.currentUser?.uid ?? 'null'}");
 
     // ตรวจสอบว่ามีคำขอลาที่รอการอนุมัติอยู่หรือไม่
     bool isPendingApproval = _leaves.any(
@@ -229,6 +237,12 @@ class _LeaveScreenState extends State<LeaveScreen> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('กรุณาเลือกประเภทการลา'),
+                              ),
+                            );
+                          } else if (_leave.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('กรุณากรอกเหตุผลการลา'),
                               ),
                             );
                           } else {

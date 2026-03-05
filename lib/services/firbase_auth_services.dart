@@ -50,8 +50,8 @@ class FirebaseAuthService {
     // String role,
   ) async {
     try {
-      if (password != confirmPassword || image != null) {
-        final imageUrl = await uploadImage(image!);
+      if (image != null) {
+        final imageUrl = await uploadImage(image);
 
         UserCredential credential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
@@ -96,7 +96,7 @@ class FirebaseAuthService {
       // });
     } on FirebaseAuthException catch (e) {
       print("Error: ${e.message}");
-      return null;
+      rethrow; // ส่ง exception กลับไปให้ caller จัดการ
     }
   }
 

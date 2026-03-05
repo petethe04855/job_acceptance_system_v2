@@ -2,7 +2,6 @@
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/components/custom_textfield.dart';
 import 'package:flutter_application_1/models/tasks_model.dart';
 import 'package:flutter_application_1/models/user_model.dart';
 import 'package:flutter_application_1/services/task_services.dart';
@@ -26,59 +25,74 @@ class JobdetailScreen extends StatefulWidget {
 
 class _JobdetailScreenState extends State<JobdetailScreen> {
   final TaskServices _taskServices = TaskServices();
+  final Utility _utility = Utility();
   bool isTaskAccepted = false;
 
-  TextEditingController detailsController = TextEditingController();
+  final TextEditingController detailsController = TextEditingController();
   FilePickerResult? fileNameUploaded;
 
   @override
   void initState() {
     super.initState();
     isTaskAccepted = widget.tasksData.taskStatus == 'รอส่งงาน';
+    _utility.logger.d(
+      'taskId: ${widget.tasksData.taskId}, uidUser: ${widget.tasksData.uidUser}',
+    );
+  }
+
+  @override
+  void dispose() {
+    detailsController.dispose();
+    super.dispose();
   }
 
   Future<void> submitWorkTaskStatusTest() async {
     try {
-      // 📌 เช็คว่าได้เลือกไฟล์และกรอกข้อมูลครบถ้วนหรือไม่
       if (fileNameUploaded != null) {
-        // 📌 อัปเดตสถานะงานก่อน
         await _taskServices.updateTaskStatusTest(
           widget.tasksData.taskId,
           'ส่งงานสำเร็จ',
           widget.user!.uid,
-          fileNameUploaded, // ส่งชื่อไฟล์
+          fileNameUploaded,
         );
 
-        // 📌 หลังจากอัปเดตสถานะงานเสร็จแล้วให้ทำการอัปโหลดไฟล์
         String? fileURL = await _taskServices.uploadFileTest(
           fileNameUploaded!.files.single.path!,
         );
 
         if (fileURL != null) {
-          // 📌 เมื่ออัปโหลดไฟล์เสร็จแล้ว ให้บันทึก URL ของไฟล์ใน Firestore
           await _taskServices.updateTaskFileURL(
             widget.tasksData.taskId,
             'ส่งงานสำเร็จ',
             widget.user!.uid,
             fileURL,
           );
-
-          print('✅ Task status and file uploaded successfully');
+          _utility.logger.d('✅ Task status and file uploaded successfully');
         } else {
-          print('❌ Failed to upload file');
+          _utility.logger.e('❌ Failed to upload file');
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('อัปโหลดไฟล์ไม่สำเร็จ โปรดลองอีกครั้ง'),
+            ),
+          );
+          return;
         }
       } else {
+        if (!mounted) return;
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('กรุณาแนบไฟล์')));
         return;
       }
-      Navigator.pop(context, true); // ✅ ปิดหน้าหลังจากสำเร็จ
+      if (!mounted) return;
+      Navigator.pop(context, true);
     } catch (e) {
-      print('❌ Error: $e');
+      _utility.logger.e('❌ Error: $e');
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Failed to update task status or upload file.'),
+          content: Text('เกิดข้อผิดพลาดในการอัปโหลดไฟล์ โปรดลองอีกครั้ง'),
         ),
       );
     }
@@ -92,16 +106,18 @@ class _JobdetailScreenState extends State<JobdetailScreen> {
         newStatus,
         widget.user!.uid,
       );
-
+      if (!mounted) return;
       setState(() {
         isTaskAccepted = !isTaskAccepted;
       });
-
-      Navigator.pop(context, true); // `true` indicates that a change was made
+      Navigator.pop(context, true);
     } catch (e) {
-      print('Failed to update task status: $e');
+      _utility.logger.e('Failed to update task status: $e');
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to update task status.')),
+        const SnackBar(
+          content: Text('อัปเดตสถานะงานไม่สำเร็จ โปรดลองอีกครั้ง'),
+        ),
       );
     }
   }
@@ -124,16 +140,18 @@ class _JobdetailScreenState extends State<JobdetailScreen> {
   }
 
   Future<void> downloadFile(String fileURL) async {
-    final Uri url = Uri.parse(fileURL); // แปลง String เป็น Uri
-
+    final Uri url = Uri.parse(fileURL);
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-      print('❌ ไม่สามารถเปิดลิงก์ได้: $fileURL');
+      _utility.logger.e('❌ ไม่สามารถเปิดลิงก์ได้: $fileURL');
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('ไม่สามารถเปิดไฟล์ได้')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    Utility().logger.e(widget.tasksData.uidUser);
     return Scaffold(
       backgroundColor: primary,
       appBar: AppBar(
